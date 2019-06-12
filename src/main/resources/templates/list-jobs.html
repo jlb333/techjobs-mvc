@@ -9,8 +9,50 @@
 <div class="container body-content">
 
     <h1 th:text="${#strings.capitalizeWords(title)}"></h1>
+   <!-- <div th:replace="fragments :: search"></div> **This doesn't seem to be working** -->
+
+    <form method= "post" th:action="@{/search/results}">
+        <h2>Search by:</h2>
+
+        <p>
+            <span th:each="column : ${columns}">
+                <input
+                        type="radio"
+                        name="searchType"
+                        th:id="${column.key}"
+                        th:value="${column.key}"
+                        th:checked="${column.key == 'all'}"/>
+                <label th:for="${column.key}" th:text="${column.value}"></label>
+            </span>
+
+        </p>
+
+        <p>
+            <label for="searchTerm">Keyword:</label>
+            <input type="text" name="searchTerm" id="searchTerm" />
+        </p>
+
+        <input type="submit" value="Search" />
+    </form>
+
+    <hr />
+
+
 
     <!-- TODO #3 - Use the same list display from search.html -->
+
+
+    <div th:if="${searchResults} and ${searchResults.size()}">
+        <h3 th:text="${searchResults.size()} + ' Result(s)'"></h3>
+        <table class = "job-listing" th:each="result : ${searchResults}">
+            <tr th:each="key : ${result.keySet()}">
+                <td th:text="${#strings.capitalizeWords(key)}"></td>
+                <td th:text="${result.get(key)}"></td>
+            </tr>
+
+        </table>
+
+    </div>
 
 </div>
 
